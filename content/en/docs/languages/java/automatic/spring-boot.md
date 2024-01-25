@@ -635,7 +635,27 @@ public class TracedClass {
 You can configure other instrumentations with
 [OpenTelemetry instrumentations libraries](https://github.com/open-telemetry/opentelemetry-java-instrumentation/blob/main/docs/supported-libraries.md#libraries--frameworks).
 
-### OpenTelemetry Zipkin Exporter Starter
+
+### Other configurations
+
+Instead of using the OpenTelemetry Spring starter, you can use the OpenTelemetry
+autoconfiguration features with an annotation or the Zipkin starter.
+
+#### Spring support
+
+Auto-configuration is natively supported by Springboot applications. To enable
+these features in "vanilla" use `@EnableOpenTelemetry` to complete a component
+scan of this package.
+
+```java
+import io.opentelemetry.instrumentation.spring.autoconfigure.EnableOpenTelemetry;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@EnableOpenTelemetry
+public class OpenTelemetryConfig {}
+```
+#### Zipkin starter
 
 OpenTelemetry Zipkin Exporter Starter is a starter package that includes the
 opentelemetry-api, opentelemetry-sdk, opentelemetry-extension-annotations,
