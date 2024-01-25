@@ -244,7 +244,7 @@ with the OpenTelemetry
 4. `spring.application.name` spring property
 5. The default value is `unknown_service:java` (lowest precedence)
 
-### Automatic instrumentation with Spring auto configurations
+### Automatic instrumentation
 
 Auto-configures OpenTelemetry instrumentation for
 [spring-web](#spring-web-auto-configuration) ,
