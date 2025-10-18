@@ -443,6 +443,10 @@
     "StatusCode": 200,
     "LastSeen": "2025-09-11T16:07:01.612259-04:00"
   },
+  "https://central.sonatype.com/artifact/io.opentelemetry.instrumentation/opentelemetry-failsafe-3.0": {
+    "StatusCode": 200,
+    "LastSeen": "2025-10-18T07:47:14.488633-04:00"
+  },
   "https://central.sonatype.com/artifact/io.opentelemetry.instrumentation/opentelemetry-graphql-java-12.0": {
     "StatusCode": 200,
     "LastSeen": "2025-09-11T16:07:20.768069-04:00"
@@ -458,6 +462,10 @@
   "https://central.sonatype.com/artifact/io.opentelemetry.instrumentation/opentelemetry-guava-10.0": {
     "StatusCode": 200,
     "LastSeen": "2025-09-11T16:07:22.56494-04:00"
+  },
+  "https://central.sonatype.com/artifact/io.opentelemetry.instrumentation/opentelemetry-helidon-4.3": {
+    "StatusCode": 200,
+    "LastSeen": "2025-10-18T07:47:19.252913-04:00"
   },
   "https://central.sonatype.com/artifact/io.opentelemetry.instrumentation/opentelemetry-hikaricp-3.0": {
     "StatusCode": 200,
@@ -526,6 +534,10 @@
   "https://central.sonatype.com/artifact/io.opentelemetry.instrumentation/opentelemetry-mongo-3.1": {
     "StatusCode": 200,
     "LastSeen": "2025-09-11T16:08:21.208743-04:00"
+  },
+  "https://central.sonatype.com/artifact/io.opentelemetry.instrumentation/opentelemetry-nats-2.17": {
+    "StatusCode": 200,
+    "LastSeen": "2025-10-18T07:47:23.07791-04:00"
   },
   "https://central.sonatype.com/artifact/io.opentelemetry.instrumentation/opentelemetry-netty-4.1": {
     "StatusCode": 200,
@@ -2942,6 +2954,10 @@
   "https://expressjs.com/": {
     "StatusCode": 200,
     "LastSeen": "2025-01-15T13:17:29.684999-05:00"
+  },
+  "https://failsafe.dev/": {
+    "StatusCode": 206,
+    "LastSeen": "2025-10-18T07:47:14.043586-04:00"
   },
   "https://farfetch.github.io/kafkaflow/docs/guides/open-telemetry": {
     "StatusCode": 206,
@@ -6166,6 +6182,10 @@
   "https://github.com/naseemkullah": {
     "StatusCode": 200,
     "LastSeen": "2025-02-02T15:46:03.836Z"
+  },
+  "https://github.com/nats-io/nats.java": {
+    "StatusCode": 206,
+    "LastSeen": "2025-10-18T07:47:22.378765-04:00"
   },
   "https://github.com/nekufa": {
     "StatusCode": 200,
@@ -17131,6 +17151,10 @@
     "StatusCode": 206,
     "LastSeen": "2025-09-11T16:06:35.401343-04:00"
   },
+  "https://helidon.io/": {
+    "StatusCode": 206,
+    "LastSeen": "2025-10-18T07:47:18.797963-04:00"
+  },
   "https://helm.sh": {
     "StatusCode": 206,
     "LastSeen": "2025-02-02T10:58:41.30109-05:00"
@@ -17442,6 +17466,10 @@
   "https://kafka.apache.org/": {
     "StatusCode": 206,
     "LastSeen": "2025-02-02T10:59:12.014503-05:00"
+  },
+  "https://kafka.apache.org/documentation/#connect": {
+    "StatusCode": 206,
+    "LastSeen": "2025-10-18T07:47:12.757835-04:00"
   },
   "https://kafka.apache.org/documentation/#producerapi": {
     "StatusCode": 206,
