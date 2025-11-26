@@ -3,7 +3,7 @@ title: Extensions
 description: List of available OpenTelemetry Collector extensions
 weight: 350
 # prettier-ignore
-cSpell:ignore: ackextension asapauthextension authextension awsproxy azureauthextension basicauthextension bearertokenauthextension cgroupruntimeextension clientauthextension datadogextension googleclientauthextension headerssetterextension healthcheckextension healthcheckv httpforwarderextension jaegerremotesampling memorylimiterextension oidcauthextension opampextension pprofextension remotetapextension sigv sleaderelector solarwindsapmsettingsextension sumologicextension zpagesextension
+cSpell:ignore: ackextension asapauthextension authextension awsproxy azureauthextension basicauthextension bearertokenauthextension cgroupruntimeextension clientauthextension datadogextension googleclientauthextension headerssetterextension healthcheckextension healthcheckv httpforwarderextension jaegerremotesampling oidcauthextension opampextension pprofextension remotetapextension sigv sleaderelector solarwindsapmsettingsextension sumologicextension
 ---
 
 Extensions provide additional capabilities like health checks and service
@@ -29,7 +29,6 @@ discovery. For more information on how to configure extensions, see the
 | [httpforwarderextension](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/httpforwarderextension)                 | contrib, K8s       | beta          |
 | [jaegerremotesampling](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/jaegerremotesampling)                     | contrib            | alpha         |
 | [k8sleaderelector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/k8sleaderelector)                             | contrib, K8s       | alpha         |
-| [memorylimiterextension](https://github.com/open-telemetry/opentelemetry-collector/tree/main/extension/memorylimiterextension)                         | contrib            | development   |
 | [oauth2clientauthextension](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/oauth2clientauthextension)           | contrib, K8s       | beta          |
 | [oidcauthextension](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/oidcauthextension)                           | contrib, K8s       | beta          |
 | [opampextension](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/opampextension)                                 | contrib, K8s       | alpha         |
@@ -38,7 +37,6 @@ discovery. For more information on how to configure extensions, see the
 | [sigv4authextension](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/sigv4authextension)                         | contrib            | beta          |
 | [solarwindsapmsettingsextension](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/solarwindsapmsettingsextension) | contrib            | development   |
 | [sumologicextension](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/sumologicextension)                         | contrib            | alpha         |
-| [zpagesextension](https://github.com/open-telemetry/opentelemetry-collector/tree/main/extension/zpagesextension)                                       | contrib, core, K8s | beta          |
 
 ⚠️ **Note:** Components marked with ⚠️ are unmaintained and have no active
 codeowners. They may not receive regular updates or bug fixes.
