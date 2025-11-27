@@ -3,7 +3,7 @@ title: Processors
 description: List of available OpenTelemetry Collector processors
 weight: 320
 # prettier-ignore
-cSpell:ignore: attributesprocessor batchprocessor coralogixprocessor cumulativetodeltaprocessor datadogsemanticsprocessor deltatocumulativeprocessor deltatorateprocessor dnslookupprocessor filterprocessor geoipprocessor groupbyattrsprocessor groupbytraceprocessor intervalprocessor isolationforestprocessor logdedupprocessor logstransformprocessor memorylimiterprocessor metricsgenerationprocessor metricstarttimeprocessor metricstransformprocessor probabilisticsamplerprocessor redactionprocessor remotetapprocessor resourcedetectionprocessor resourceprocessor sattributesprocessor schemaprocessor spanprocessor sumologicprocessor tailsamplingprocessor transformprocessor unrollprocessor xprocessor
+cSpell:ignore: attributesprocessor coralogixprocessor cumulativetodeltaprocessor datadogsemanticsprocessor deltatocumulativeprocessor deltatorateprocessor dnslookupprocessor filterprocessor geoipprocessor groupbyattrsprocessor groupbytraceprocessor intervalprocessor isolationforestprocessor logdedupprocessor logstransformprocessor metricsgenerationprocessor metricstarttimeprocessor metricstransformprocessor probabilisticsamplerprocessor redactionprocessor remotetapprocessor resourcedetectionprocessor resourceprocessor sattributesprocessor schemaprocessor spanprocessor sumologicprocessor tailsamplingprocessor transformprocessor unrollprocessor xprocessor
 ---
 
 Processors transform, filter, and enrich telemetry data as it flows through the
@@ -15,7 +15,6 @@ pipeline. For more information on how to configure processors, see the
 | Name                                                                                                                                                 | Distributions[^1]  | Traces[^2]  | Metrics[^2] | Logs[^2]    |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----------- | ----------- | ----------- |
 | [attributesprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/attributesprocessor)                     | contrib, core, K8s | beta        | beta        | beta        |
-| [batchprocessor](https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor)                                       | contrib, core, K8s | beta        | beta        | beta        |
 | [coralogixprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/coralogixprocessor)                       | contrib            | alpha       | -           | -           |
 | [cumulativetodeltaprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/cumulativetodeltaprocessor)       | contrib, K8s       | -           | beta        | -           |
 | [datadogsemanticsprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/datadogsemanticsprocessor)         | contrib            | development | -           | -           |
@@ -31,7 +30,6 @@ pipeline. For more information on how to configure processors, see the
 | [k8sattributesprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/k8sattributesprocessor)               | contrib, K8s       | beta        | beta        | beta        |
 | [logdedupprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/logdedupprocessor)                         | contrib, K8s       | -           | -           | alpha       |
 | [logstransformprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/logstransformprocessor)               | contrib            | -           | -           | development |
-| [memorylimiterprocessor](https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/memorylimiterprocessor)                       | contrib, core, K8s | beta        | beta        | beta        |
 | [metricsgenerationprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/metricsgenerationprocessor)       | contrib            | -           | alpha       | -           |
 | [metricstarttimeprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/metricstarttimeprocessor)           | contrib            | -           | beta        | -           |
 | [metricstransformprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/metricstransformprocessor)         | contrib, K8s       | -           | beta        | -           |
