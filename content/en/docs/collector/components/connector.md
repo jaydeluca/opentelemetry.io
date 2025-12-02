@@ -3,7 +3,7 @@ title: Connectors
 description: List of available OpenTelemetry Collector connectors
 weight: 340
 # prettier-ignore
-cSpell:ignore: countconnector datadogconnector exceptionsconnector failoverconnector forwardconnector grafanacloudconnector otlpjsonconnector roundrobinconnector routingconnector servicegraphconnector signaltometricsconnector slowsqlconnector spanmetricsconnector sumconnector
+cSpell:ignore: countconnector datadogconnector exceptionsconnector failoverconnector forwardconnector grafanacloudconnector metricsaslogsconnector otlpjsonconnector roundrobinconnector routingconnector servicegraphconnector signaltometricsconnector slowsqlconnector spanmetricsconnector sumconnector
 ---
 
 Connectors connect two pipelines, acting as both exporter and receiver. For more
@@ -20,6 +20,7 @@ information on how to configure connectors, see the
 | [failoverconnector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/failoverconnector)               | contrib, K8s       |
 | [forwardconnector](https://github.com/open-telemetry/opentelemetry-collector/tree/main/connector/forwardconnector)                         | contrib, core, K8s |
 | [grafanacloudconnector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/grafanacloudconnector)       | contrib            |
+| [metricsaslogsconnector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/metricsaslogsconnector)     | contrib            |
 | [otlpjsonconnector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/otlpjsonconnector)               | contrib, K8s       |
 | [roundrobinconnector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/roundrobinconnector)           | contrib, K8s       |
 | [routingconnector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/routingconnector)                 | contrib, K8s       |
