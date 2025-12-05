@@ -42,6 +42,17 @@ discovery. For more information on how to configure extensions, see the
 | [sumologicextension](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/sumologicextension)                         | contrib            | alpha         |
 | [zpagesextension](https://github.com/open-telemetry/opentelemetry-collector/tree/main/extension/zpagesextension)                                       | contrib, core, K8s | beta          |
 
+⚠️ **Note:** Components marked with ⚠️ are unmaintained and have no active
+codeowners. They may not receive regular updates or bug fixes.
+
+[^1]:
+    Shows which [distributions](/docs/collector/distributions/) (core, contrib,
+    K8s, etc.) include this component.
+
+[^2]:
+    For details about component stability levels, see the
+    [OpenTelemetry Collector component stability definitions](https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/component-stability.md).
+
 <!-- END GENERATED: extension-table SOURCE: collector-watcher -->
 
 ## Encoding Extensions
