@@ -47,12 +47,4 @@ pipeline. For more information on how to configure processors, see the
 | [transformprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor)                       | contrib, K8s       | beta        | beta        | beta        |
 | [unrollprocessor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/unrollprocessor)                             | contrib            | -           | -           | alpha       |
 
-[^1]:
-    Shows which [distributions](/docs/collector/distributions/) (core, contrib,
-    K8s, etc.) include this component.
-
-[^2]:
-    For details about component stability levels, see the
-    [OpenTelemetry Collector component stability definitions](https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/component-stability.md).
-
 <!-- END GENERATED: processor-table SOURCE: collector-watcher -->

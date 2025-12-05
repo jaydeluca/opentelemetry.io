@@ -30,8 +30,4 @@ information on how to configure connectors, see the
 | [spanmetricsconnector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/spanmetricsconnector)         | contrib            |
 | [sumconnector](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/sumconnector)                         | contrib            |
 
-[^1]:
-    Shows which [distributions](/docs/collector/distributions/) (core, contrib,
-    K8s, etc.) include this component.
-
 <!-- END GENERATED: connector-table SOURCE: collector-watcher -->
