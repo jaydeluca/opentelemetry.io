@@ -132,6 +132,9 @@ information on how to configure receivers, see the
 | [zipkinreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/zipkinreceiver)                                 | contrib, core, K8s       | beta        | -            | -            |
 | [zookeeperreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/zookeeperreceiver)                           | contrib                  | -           | alpha        | -            |
 
+⚠️ **Note:** Components marked with ⚠️ are unmaintained and have no active
+codeowners. They may not receive regular updates or bug fixes.
+
 [^1]:
     Shows which [distributions](/docs/collector/distributions/) (core, contrib,
     K8s, etc.) include this component.
