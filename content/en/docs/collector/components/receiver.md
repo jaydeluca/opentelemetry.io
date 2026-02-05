@@ -12,7 +12,7 @@ information on how to configure receivers, see the
 
 {{% include unmaintained-components-msg.md %}}
 
-<!-- BEGIN GENERATED: receiver-table SOURCE: collector-watcher -->
+<!-- BEGIN GENERATED: receiver-table SOURCE: open-telemetry/opentelemetry-ecosystem-explorer -->
 
 | Name                                                                                                                                                  | Distributions[^1]        | Traces[^2]  | Metrics[^2]  | Logs[^2]     |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------- | ------------ | ------------ |
@@ -62,7 +62,7 @@ information on how to configure receivers, see the
 | [iisreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/iisreceiver)                                       | contrib                  | -           | beta         | -            |
 | [influxdbreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/influxdbreceiver)                             | contrib                  | -           | beta         | -            |
 | [jaegerreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/jaegerreceiver)                                 | contrib, core, K8s       | beta        | -            | -            |
-| [jmxreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/jmxreceiver)                                       | contrib                  | -           | beta         | -            |
+| [jmxreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/jmxreceiver)                                       | contrib                  | -           | deprecated   | -            |
 | [journaldreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/journaldreceiver)                             | contrib, K8s             | -           | -            | alpha        |
 | [k8sclusterreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sclusterreceiver)                         | contrib, K8s             | -           | beta         | development  |
 | [k8seventsreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8seventsreceiver)                           | contrib, K8s             | -           | -            | alpha        |
@@ -140,4 +140,4 @@ information on how to configure receivers, see the
     For details about component stability levels, see the
     [OpenTelemetry Collector component stability definitions](https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/component-stability.md).
 
-<!-- END GENERATED: receiver-table SOURCE: collector-watcher -->
+<!-- END GENERATED: receiver-table SOURCE: open-telemetry/opentelemetry-ecosystem-explorer -->
