@@ -10,7 +10,7 @@ Exporters send telemetry data to observability backends and destinations. For
 more information on how to configure exporters, see the
 [Collector configuration documentation](/docs/collector/configuration/#exporters).
 
-<!-- BEGIN GENERATED: exporter-table SOURCE: collector-watcher -->
+<!-- BEGIN GENERATED: exporter-table SOURCE: open-telemetry/opentelemetry-ecosystem-explorer -->
 
 | Name                                                                                                                                                    | Distributions[^1]        | Traces[^2]  | Metrics[^2] | Logs[^2]    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------- | ----------- | ----------- |
@@ -37,7 +37,7 @@ more information on how to configure exporters, see the
 | [fileexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/fileexporter)                                       | contrib, core, K8s       | alpha       | alpha       | alpha       |
 | [googlecloudexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/googlecloudexporter)                         | contrib                  | beta        | beta        | beta        |
 | [googlecloudpubsubexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/googlecloudpubsubexporter)             | contrib                  | beta        | beta        | beta        |
-| [googlecloudstorageexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/googlecloudstorageexporter)           | contrib                  | -           | -           | alpha       |
+| [googlecloudstorageexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/googlecloudstorageexporter)           | contrib                  | development | -           | alpha       |
 | [googlemanagedprometheusexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/googlemanagedprometheusexporter) | contrib                  | -           | beta        | -           |
 | [honeycombmarkerexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/honeycombmarkerexporter)                 | contrib                  | -           | -           | alpha       |
 | [influxdbexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/influxdbexporter)                               | contrib                  | beta        | beta        | beta        |
@@ -57,7 +57,7 @@ more information on how to configure exporters, see the
 | [rabbitmqexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/rabbitmqexporter)                               | contrib                  | alpha       | alpha       | alpha       |
 | [sapmexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/sapmexporter)                                       | contrib                  | deprecated  | -           | -           |
 | [sematextexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/sematextexporter)                               | contrib                  | -           | development | development |
-| [sentryexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/sentryexporter)                                   | contrib                  | beta        | -           | -           |
+| [sentryexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/sentryexporter)                                   | contrib                  | alpha       | -           | alpha       |
 | [signalfxexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/signalfxexporter)                               | contrib                  | beta        | beta        | beta        |
 | [splunkhecexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/splunkhecexporter)                             | contrib                  | beta        | beta        | beta        |
 | [stefexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/stefexporter)                                       | contrib                  | -           | alpha       | -           |
@@ -75,4 +75,4 @@ more information on how to configure exporters, see the
     For details about component stability levels, see the
     [OpenTelemetry Collector component stability definitions](https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/component-stability.md).
 
-<!-- END GENERATED: exporter-table SOURCE: collector-watcher -->
+<!-- END GENERATED: exporter-table SOURCE: open-telemetry/opentelemetry-ecosystem-explorer -->
