@@ -12,7 +12,7 @@ information on how to configure receivers, see the
 
 {{% include unmaintained-components-msg.md %}}
 
-<!-- BEGIN GENERATED: receiver-table SOURCE: collector-watcher -->
+<!-- BEGIN GENERATED: receiver-table SOURCE: scripts/collector-sync -->
 
 | Name                                                                                                                                                  | Distributions[^1]        | Traces[^2]  | Metrics[^2]  | Logs[^2]     |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------- | ------------ | ------------ |
@@ -30,6 +30,7 @@ information on how to configure receivers, see the
 | [azureblobreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/azureblobreceiver)                           | contrib                  | alpha       | -            | alpha        |
 | [azureeventhubreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/azureeventhubreceiver)                   | contrib                  | alpha       | alpha        | alpha        |
 | [azuremonitorreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/azuremonitorreceiver)                     | contrib                  | -           | alpha        | -            |
+| [bigipreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/bigipreceiver) ⚠️                                | contrib                  | -           | unmaintained | -            |
 | [carbonreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/carbonreceiver) ⚠️                              | contrib                  | -           | unmaintained | -            |
 | [chronyreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/chronyreceiver)                                 | contrib                  | -           | beta         | -            |
 | [ciscoosreceiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/ciscoosreceiver)                               | contrib                  | -           | alpha        | -            |
@@ -140,4 +141,4 @@ information on how to configure receivers, see the
     For details about component stability levels, see the
     [OpenTelemetry Collector component stability definitions](https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/component-stability.md).
 
-<!-- END GENERATED: receiver-table SOURCE: collector-watcher -->
+<!-- END GENERATED: receiver-table SOURCE: scripts/collector-sync -->
