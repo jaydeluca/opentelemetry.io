@@ -183,8 +183,8 @@ class TestMainOrchestration:
 
         main()
 
-        # Verify schema was fetched
-        mock_fetcher.fetch_file_content.assert_called_once_with("schema/config.yaml")
+        # Verify schema was fetched with ref="main" (default for lang-status mode)
+        mock_fetcher.fetch_file_content.assert_called_once_with("schema/config.yaml", ref="main")
 
     @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
@@ -569,3 +569,107 @@ class TestModeArgumentParsing:
 
         # argparse exits with code 2 for invalid argument values
         assert exc_info.value.code == 2
+
+
+class TestModeRefSelection:
+    """Tests for --mode flag to ref selection wiring."""
+
+    @patch("sys.argv", ["main", "--mode=lang-status"])
+    @patch("declarative_configuration_sync.main.run_npm_formatter")
+    @patch("declarative_configuration_sync.main.SchemaParser")
+    @patch("declarative_configuration_sync.main.InventoryManager")
+    @patch("declarative_configuration_sync.main.GitHubSchemaFetcher")
+    @patch("declarative_configuration_sync.main.os.chdir")
+    @patch("declarative_configuration_sync.main.find_repo_root")
+    def test_mode_lang_status_uses_main_ref(
+        self,
+        mock_find_root: Mock,
+        mock_chdir: Mock,
+        mock_fetcher_class: Mock,
+        mock_inventory_class: Mock,
+        mock_parser_class: Mock,
+        mock_formatter: Mock,
+        tmp_path: Path,
+    ) -> None:
+        """Test that --mode=lang-status uses ref='main'."""
+        mock_find_root.return_value = tmp_path
+        mock_inventory = Mock()
+        mock_inventory.discover_schemas.return_value = ["schema/test.yaml"]
+        mock_inventory_class.return_value = mock_inventory
+
+        mock_fetcher = Mock()
+        mock_fetcher.fetch_file_content.return_value = "languages: []"
+        mock_fetcher_class.return_value = mock_fetcher
+
+        # Mock parser to return empty results
+        mock_parser = Mock()
+        mock_parser.parse_language_status.return_value = []
+        mock_parser.parse_schema_types.return_value = []
+        mock_parser_class.return_value = mock_parser
+
+        mock_formatter.return_value = True
+
+        with patch("declarative_configuration_sync.main.ContentGenerator"):
+            with patch("declarative_configuration_sync.main.MarkerUpdater"):
+                with patch("declarative_configuration_sync.main.yaml.safe_load") as mock_yaml:
+                    mock_yaml.return_value = {"languages": {}}
+                    with patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile"):
+                        with patch("builtins.open", new_callable=MagicMock):
+                            main()
+
+        # Verify fetch_file_content was called with ref="main"
+        mock_fetcher.fetch_file_content.assert_called_once()
+        call_args = mock_fetcher.fetch_file_content.call_args
+        assert call_args[1]["ref"] == "main"
+
+    @patch("sys.argv", ["main", "--mode=types"])
+    @patch("declarative_configuration_sync.main.run_npm_formatter")
+    @patch("declarative_configuration_sync.main.SchemaParser")
+    @patch("declarative_configuration_sync.main.InventoryManager")
+    @patch("declarative_configuration_sync.main.GitHubSchemaFetcher")
+    @patch("declarative_configuration_sync.main.os.chdir")
+    @patch("declarative_configuration_sync.main.find_repo_root")
+    def test_mode_types_calls_fetch_latest_release(
+        self,
+        mock_find_root: Mock,
+        mock_chdir: Mock,
+        mock_fetcher_class: Mock,
+        mock_inventory_class: Mock,
+        mock_parser_class: Mock,
+        mock_formatter: Mock,
+        tmp_path: Path,
+    ) -> None:
+        """Test that --mode=types calls fetch_latest_release() and uses returned tag."""
+        mock_find_root.return_value = tmp_path
+        mock_inventory = Mock()
+        mock_inventory.discover_schemas.return_value = ["schema/test.yaml"]
+        mock_inventory_class.return_value = mock_inventory
+
+        mock_fetcher = Mock()
+        mock_fetcher.fetch_latest_release.return_value = "v0.2.0"
+        mock_fetcher.fetch_file_content.return_value = "types: []"
+        mock_fetcher_class.return_value = mock_fetcher
+
+        # Mock parser to return empty results
+        mock_parser = Mock()
+        mock_parser.parse_language_status.return_value = []
+        mock_parser.parse_schema_types.return_value = []
+        mock_parser_class.return_value = mock_parser
+
+        mock_formatter.return_value = True
+
+        with patch("declarative_configuration_sync.main.ContentGenerator"):
+            with patch("declarative_configuration_sync.main.MarkerUpdater"):
+                with patch("declarative_configuration_sync.main.yaml.safe_load") as mock_yaml:
+                    mock_yaml.return_value = {"types": []}
+                    with patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile"):
+                        with patch("builtins.open", new_callable=MagicMock):
+                            main()
+
+        # Verify fetch_latest_release was called
+        mock_fetcher.fetch_latest_release.assert_called_once()
+
+        # Verify fetch_file_content was called with ref="v0.2.0"
+        mock_fetcher.fetch_file_content.assert_called_once()
+        call_args = mock_fetcher.fetch_file_content.call_args
+        assert call_args[1]["ref"] == "v0.2.0"

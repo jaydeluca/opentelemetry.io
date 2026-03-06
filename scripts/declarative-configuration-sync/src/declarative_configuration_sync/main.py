@@ -148,6 +148,21 @@ def main() -> None:
     fetcher = GitHubSchemaFetcher()
     inventory_manager = InventoryManager()
 
+    # Determine Git ref based on sync mode
+    logger.info("\nDetermining Git ref for sync mode...")
+    try:
+        if args.mode == "types":
+            # For types sync, fetch from latest release
+            ref = fetcher.fetch_latest_release()
+            logger.info(f"Syncing types documentation from release: {ref}")
+        else:
+            # For lang-status sync, fetch from main branch
+            ref = "main"
+            logger.info("Syncing language implementation status from main branch")
+    except RuntimeError as e:
+        logger.error(f"❌ {e}")
+        sys.exit(1)
+
     # Discover schemas
     logger.info("\nDiscovering schema files via GitHub API...")
     try:
@@ -169,7 +184,7 @@ def main() -> None:
 
         try:
             # Fetch schema content from GitHub API
-            yaml_content = fetcher.fetch_file_content(schema_path)
+            yaml_content = fetcher.fetch_file_content(schema_path, ref=ref)
 
             # Write to temporary file for parsing
             with tempfile.NamedTemporaryFile(
