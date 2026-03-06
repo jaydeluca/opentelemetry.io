@@ -32,6 +32,19 @@ content that applies broadly to the OpenTelemetry community. Blog posts should
 follow the policies outlined in the
 [Social Media Guide](https://github.com/open-telemetry/community/blob/main/social-media-guide.md).
 
+### Linking to GitHub repositories
+
+Blog posts are checked by markdownlint (`gh-url-hash`) to prevent unstable
+GitHub `blob`/`tree` links.
+
+If the check reports an issue:
+
+- Replace default-branch refs (for example `main`/`master`) with a tag/release
+  or a commit hash.
+- Use a full 40-character commit hash (short hashes are flagged).
+- Run `npm run fix:markdown` to auto-fix what it can, then fix any remaining
+  reported links manually.
+
 Verify that your intended content broadly applies to the OpenTelemetry Community
 . Appropriate content includes:
 

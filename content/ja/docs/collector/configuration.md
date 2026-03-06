@@ -2,10 +2,10 @@
 title: 設定
 weight: 20
 description: ニーズに合わせてコレクターを設定する方法を確認してください
-default_lang_commit: 276d7eb3f936deef6487cdd2b1d89822951da6c8
+default_lang_commit: 276d7eb3f936deef6487cdd2b1d89822951da6c8 # patched
 drifted_from_default: true
 # prettier-ignore
-cSpell:ignore: cfssl cfssljson fluentforward gencert genkey hostmetrics initca oidc otlphttp pprof prodevent prometheusremotewrite spanevents upsert zpages
+cSpell:ignore: cfssl cfssljson fluentforward gencert genkey hostmetrics initca oidc pprof prodevent prometheusremotewrite spanevents upsert zpages
 ---
 
 <!-- markdownlint-disable link-fragments -->
@@ -99,7 +99,7 @@ processors:
   batch:
 
 exporters:
-  otlp:
+  otlp_grpc:
     endpoint: otelcol:4317
 
 extensions:
@@ -116,15 +116,15 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlp_grpc]
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlp_grpc]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlp_grpc]
 ```
 
 レシーバー、プロセッサー、エクスポーター、パイプラインは、`type[/name]` 形式にしたがうコンポーネント識別子で定義されることに注意してください。
@@ -150,9 +150,9 @@ processors:
   batch/test:
 
 exporters:
-  otlp:
+  otlp_grpc:
     endpoint: otelcol:4317
-  otlp/2:
+  otlp_grpc/2:
     endpoint: otelcol2:4317
 
 extensions:
@@ -169,19 +169,19 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlp_grpc]
     traces/2:
       receivers: [otlp/2]
       processors: [batch/test]
-      exporters: [otlp/2]
+      exporters: [otlp_grpc/2]
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlp_grpc]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlp_grpc]
 ```
 
 設定は他のファイルを含むこともでき、コレクターはそれらをYAML設定の単一のメモリ内表現にマージします。
@@ -201,13 +201,13 @@ service:
     traces:
       receivers: [otlp]
       processors: []
-      exporters: [otlp]
+      exporters: [otlp_grpc]
 ```
 
 そして `exporters.yaml` ファイルが次のようになっているとします。
 
 ```yaml
-otlp:
+otlp_grpc:
   endpoint: otelcol.observability.svc.cluster.local:443
 ```
 
@@ -221,7 +221,7 @@ receivers:
         endpoint: 0.0.0.0:4317
 
 exporters:
-  otlp:
+  otlp_grpc:
     endpoint: otelcol.observability.svc.cluster.local:443
 
 service:
@@ -230,7 +230,7 @@ service:
     traces:
       receivers: [otlp]
       processors: []
-      exporters: [otlp]
+      exporters: [otlp_grpc]
 ```
 
 ## レシーバー <img width="35" class="img-initial" alt="" src="/img/logos/32x32/Receivers.svg"> {#receivers}
@@ -426,7 +426,7 @@ exporters:
     path: ./filename.json
 
   # データソース: トレース
-  otlp/jaeger:
+  otlp_grpc/jaeger:
     endpoint: jaeger-server:4317
     tls:
       cert_file: cert.pem
@@ -446,14 +446,14 @@ exporters:
     endpoint: otelcol2:55678
 
   # データソース: トレース、メトリクス、ログ
-  otlp:
+  otlp_grpc:
     endpoint: otelcol2:4317
     tls:
       cert_file: cert.pem
       key_file: cert-key.pem
 
   # データソース: トレース、メトリクス
-  otlphttp:
+  otlp_http:
     endpoint: https://otlp.example.com:4318
 
   # データソース: メトリクス
@@ -679,7 +679,7 @@ HTTPまたはgRPCポートを公開しているほとんどのレシーバーは
 - レシーバーのサーバー認証機能として、着信接続を認証します。
 
 既知の認証機能のリストについては、[レジストリ](/ecosystem/registry/?s=authenticator&component=extension)を参照してください。
-カスタムの認証機能を開発したい場合は、[認証機能の拡張を開発する](../building/authenticator-extension) を参照してください。
+カスタムの認証機能を開発したい場合は、[認証機能の拡張を開発する](/docs/collector/extend/custom-component/extension/authenticator/) を参照してください。
 
 コレクターのレシーバーにサーバー認証機能を追加するには、以下の手順にしたがいます。
 
@@ -739,7 +739,7 @@ receivers:
 processors:
 
 exporters:
-  otlp/auth:
+  otlp_grpc/auth:
     endpoint: remote-コレクター:4317
     auth:
       authenticator: oauth2client
@@ -753,7 +753,7 @@ service:
         - otlp
       processors: []
       exporters:
-        - otlp/auth
+        - otlp_grpc/auth
 ```
 
 ### 証明書の設定 {#setting-up-certificates}
