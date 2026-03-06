@@ -15,7 +15,7 @@ from declarative_configuration_sync.main import main
 class TestMainOrchestration:
     """Tests for main() function orchestration."""
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("declarative_configuration_sync.main.find_repo_root")
     @patch("logging.basicConfig")
     def test_sets_up_logging(self, mock_logging: Mock, mock_find_root: Mock) -> None:
@@ -30,7 +30,7 @@ class TestMainOrchestration:
         call_kwargs = mock_logging.call_args[1]
         assert call_kwargs["level"] == 20  # logging.INFO
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.InventoryManager")
     @patch("declarative_configuration_sync.main.os.chdir")
@@ -51,7 +51,7 @@ class TestMainOrchestration:
         assert mock_find_root.call_count >= 1
         mock_chdir.assert_called_once_with(tmp_path)
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
     @patch("declarative_configuration_sync.main.ContentGenerator")
@@ -85,7 +85,7 @@ class TestMainOrchestration:
         mock_fetcher_class.assert_called_once()
         mock_inventory_class.assert_called_once()
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
     @patch("declarative_configuration_sync.main.ContentGenerator")
@@ -118,7 +118,7 @@ class TestMainOrchestration:
         # Verify discover_schemas was called
         mock_inventory.discover_schemas.assert_called_once()
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
     @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
@@ -186,7 +186,7 @@ class TestMainOrchestration:
         # Verify schema was fetched
         mock_fetcher.fetch_file_content.assert_called_once_with("schema/config.yaml")
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
     @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.Path.unlink")
@@ -257,7 +257,7 @@ class TestMainOrchestration:
         # Verify content was written to temp file
         mock_temp.write.assert_called_once_with("yaml: content")
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
     @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
@@ -330,7 +330,7 @@ class TestMainOrchestration:
         mock_generator.generate_language_status_accordion.assert_called_once()
         mock_generator.generate_type_table.assert_called_once_with(mock_types)
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
     @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
@@ -411,7 +411,7 @@ class TestMainOrchestration:
         assert calls[1][0][1] == "types"
         assert calls[1][0][2] == "type content"
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
     @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
@@ -450,7 +450,7 @@ class TestMainOrchestration:
         # Verify formatter was called with repo root
         mock_formatter.assert_called_once_with(tmp_path)
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
     @patch("declarative_configuration_sync.main.ContentGenerator")
@@ -481,7 +481,7 @@ class TestMainOrchestration:
         # Should not raise SystemExit
         main()
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("declarative_configuration_sync.main.find_repo_root")
     def test_exits_with_one_on_repo_root_error(
         self, mock_find_root: Mock
@@ -494,7 +494,7 @@ class TestMainOrchestration:
 
         assert exc_info.value.code == 1
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("declarative_configuration_sync.main.os.chdir")
     @patch("declarative_configuration_sync.main.find_repo_root")
     @patch("declarative_configuration_sync.main.InventoryManager")
@@ -511,3 +511,61 @@ class TestMainOrchestration:
             main()
 
         assert exc_info.value.code == 1
+
+
+class TestModeArgumentParsing:
+    """Tests for --mode argument parsing."""
+
+    @patch("sys.argv", ["main", "--mode=lang-status"])
+    @patch("declarative_configuration_sync.main.run_npm_formatter")
+    @patch("declarative_configuration_sync.main.InventoryManager")
+    @patch("declarative_configuration_sync.main.os.chdir")
+    @patch("declarative_configuration_sync.main.find_repo_root")
+    def test_mode_lang_status_parses_successfully(
+        self, mock_find_root: Mock, mock_chdir: Mock, mock_inventory_class: Mock, mock_formatter: Mock, tmp_path: Path
+    ) -> None:
+        """Test 1: main() with --mode=lang-status parses successfully."""
+        mock_find_root.return_value = tmp_path
+        mock_inventory = Mock()
+        mock_inventory.discover_schemas.return_value = []
+        mock_inventory_class.return_value = mock_inventory
+        mock_formatter.return_value = True
+
+        # Should not raise SystemExit
+        main()
+
+    @patch("sys.argv", ["main", "--mode=types"])
+    @patch("declarative_configuration_sync.main.run_npm_formatter")
+    @patch("declarative_configuration_sync.main.InventoryManager")
+    @patch("declarative_configuration_sync.main.os.chdir")
+    @patch("declarative_configuration_sync.main.find_repo_root")
+    def test_mode_types_parses_successfully(
+        self, mock_find_root: Mock, mock_chdir: Mock, mock_inventory_class: Mock, mock_formatter: Mock, tmp_path: Path
+    ) -> None:
+        """Test 2: main() with --mode=types parses successfully."""
+        mock_find_root.return_value = tmp_path
+        mock_inventory = Mock()
+        mock_inventory.discover_schemas.return_value = []
+        mock_inventory_class.return_value = mock_inventory
+        mock_formatter.return_value = True
+
+        # Should not raise SystemExit
+        main()
+
+    @patch("sys.argv", ["main"])
+    def test_missing_mode_flag_exits_with_error(self) -> None:
+        """Test 3: main() without --mode flag exits with error."""
+        with pytest.raises(SystemExit) as exc_info:
+            main()
+
+        # argparse exits with code 2 for invalid arguments
+        assert exc_info.value.code == 2
+
+    @patch("sys.argv", ["main", "--mode=invalid"])
+    def test_invalid_mode_value_exits_with_error(self) -> None:
+        """Test 4: main() with invalid mode value exits with error."""
+        with pytest.raises(SystemExit) as exc_info:
+            main()
+
+        # argparse exits with code 2 for invalid argument values
+        assert exc_info.value.code == 2
