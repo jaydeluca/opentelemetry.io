@@ -9,11 +9,23 @@ This module orchestrates the complete pipeline:
 6. npm formatting for Prettier compliance
 """
 
+import argparse
 import logging
 import os
 import subprocess
 import sys
+import tempfile
+from collections import defaultdict
 from pathlib import Path
+
+import yaml
+
+from declarative_configuration_sync.content_generator import ContentGenerator
+from declarative_configuration_sync.github_fetcher import GitHubSchemaFetcher
+from declarative_configuration_sync.inventory_manager import InventoryManager
+from declarative_configuration_sync.marker_updater import MarkerUpdater
+from declarative_configuration_sync.schema_parser import SchemaParser
+from declarative_configuration_sync.type_defs import LanguageImplementation
 
 logger = logging.getLogger(__name__)
 
@@ -84,3 +96,127 @@ def run_npm_formatter(repo_root: Path) -> bool:
     except Exception as e:
         logger.error(f"Unexpected error running formatter: {e}")
         return False
+
+
+def configure_logging() -> None:
+    """Configure logging with INFO level and simple format."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+        handlers=[logging.StreamHandler(sys.stdout)],
+    )
+
+
+def main() -> None:
+    """Update declarative configuration documentation."""
+    configure_logging()
+
+    parser = argparse.ArgumentParser(
+        description="Update OpenTelemetry declarative configuration documentation",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    args = parser.parse_args()
+
+    logger.info("=" * 60)
+    logger.info("Declarative Configuration Documentation Sync")
+    logger.info("=" * 60)
+    logger.info("")
+
+    # Find and change to repository root
+    try:
+        repo_root = find_repo_root()
+        logger.info(f"Repository root: {repo_root}")
+        os.chdir(repo_root)
+        logger.info(f"Changed working directory to: {Path.cwd()}")
+    except RuntimeError as e:
+        logger.error(f"❌ {e}")
+        sys.exit(1)
+
+    # Initialize GitHub API clients
+    logger.info("\nInitializing GitHub API clients...")
+    fetcher = GitHubSchemaFetcher()
+    inventory_manager = InventoryManager()
+
+    # Discover schemas
+    logger.info("\nDiscovering schema files via GitHub API...")
+    try:
+        schema_paths = inventory_manager.discover_schemas()
+        logger.info(f"Found {len(schema_paths)} schema files")
+    except RuntimeError as e:
+        logger.error(f"❌ {e}")
+        sys.exit(1)
+
+    # Parse and generate for each schema
+    logger.info("\nGenerating documentation...")
+    parser_obj = SchemaParser()
+    generator = ContentGenerator()
+    updater = MarkerUpdater()
+
+    for schema_path in schema_paths:
+        schema_name = Path(schema_path).name
+        logger.info(f"Processing {schema_name}...")
+
+        try:
+            # Fetch schema content from GitHub API
+            yaml_content = fetcher.fetch_file_content(schema_path)
+
+            # Write to temporary file for parsing
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".yaml", delete=False
+            ) as tmp_file:
+                tmp_file.write(yaml_content)
+                tmp_path = Path(tmp_file.name)
+
+            try:
+                # Parse YAML from temp file
+                with open(tmp_path) as f:
+                    schema_data = yaml.safe_load(f)
+
+                # Parse schema
+                implementations = parser_obj.parse_language_status(schema_data)
+                types = parser_obj.parse_schema_types(schema_data)
+
+                # Group implementations by language for accordion generation
+                implementations_by_language: dict[str, list[LanguageImplementation]] = defaultdict(list)
+                for impl in implementations:
+                    implementations_by_language[impl["language"]].append(impl)
+
+                # Generate markdown
+                language_content = generator.generate_language_status_accordion(
+                    implementations_by_language
+                )
+                type_content = generator.generate_type_table(types)
+
+                # Update target files
+                lang_status_file = (
+                    repo_root
+                    / "content/en/docs/languages/sdk-configuration/language-implementation-status.md"
+                )
+                types_file = (
+                    repo_root / "content/en/docs/languages/sdk-configuration/types.md"
+                )
+
+                updater.update_file(
+                    lang_status_file, "language-implementation-status", language_content
+                )
+                updater.update_file(types_file, "types", type_content)
+
+                logger.info(f"✓ Updated documentation for {schema_name}")
+            finally:
+                # Clean up temporary file
+                tmp_path.unlink(missing_ok=True)
+
+        except Exception as e:
+            logger.error(f"❌ Failed to process {schema_name}: {e}")
+            sys.exit(1)
+
+    # Format generated content
+    logger.info("\nFormatting generated content...")
+    if not run_npm_formatter(repo_root):
+        logger.warning("⚠️  Formatting failed but continuing...")
+
+    logger.info("\n✅ Done!")
+
+
+if __name__ == "__main__":
+    main()

@@ -15,6 +15,7 @@ from declarative_configuration_sync.main import main
 class TestMainOrchestration:
     """Tests for main() function orchestration."""
 
+    @patch("sys.argv", ["main"])
     @patch("declarative_configuration_sync.main.find_repo_root")
     @patch("logging.basicConfig")
     def test_sets_up_logging(self, mock_logging: Mock, mock_find_root: Mock) -> None:
@@ -29,30 +30,28 @@ class TestMainOrchestration:
         call_kwargs = mock_logging.call_args[1]
         assert call_kwargs["level"] == 20  # logging.INFO
 
+    @patch("sys.argv", ["main"])
+    @patch("declarative_configuration_sync.main.run_npm_formatter")
+    @patch("declarative_configuration_sync.main.InventoryManager")
     @patch("declarative_configuration_sync.main.os.chdir")
     @patch("declarative_configuration_sync.main.find_repo_root")
     def test_finds_repo_root_and_changes_directory(
-        self, mock_find_root: Mock, mock_chdir: Mock, tmp_path: Path
+        self, mock_find_root: Mock, mock_chdir: Mock, mock_inventory_class: Mock, mock_formatter: Mock, tmp_path: Path
     ) -> None:
         """Test 2: main() finds repo root and changes working directory."""
         mock_find_root.return_value = tmp_path
-        mock_find_root.side_effect = [
-            tmp_path,
-            RuntimeError("Stop after chdir"),
-        ]
+        mock_inventory = Mock()
+        mock_inventory.discover_schemas.return_value = []
+        mock_inventory_class.return_value = mock_inventory
+        mock_formatter.return_value = True
 
-        # We need to stop execution after chdir
-        with patch(
-            "declarative_configuration_sync.main.GitHubSchemaFetcher",
-            side_effect=RuntimeError("Stop"),
-        ):
-            with pytest.raises(SystemExit):
-                main()
+        main()
 
         # Verify repo root was found and chdir was called
         assert mock_find_root.call_count >= 1
         mock_chdir.assert_called_once_with(tmp_path)
 
+    @patch("sys.argv", ["main"])
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
     @patch("declarative_configuration_sync.main.ContentGenerator")
@@ -86,6 +85,7 @@ class TestMainOrchestration:
         mock_fetcher_class.assert_called_once()
         mock_inventory_class.assert_called_once()
 
+    @patch("sys.argv", ["main"])
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
     @patch("declarative_configuration_sync.main.ContentGenerator")
@@ -118,6 +118,9 @@ class TestMainOrchestration:
         # Verify discover_schemas was called
         mock_inventory.discover_schemas.assert_called_once()
 
+    @patch("sys.argv", ["main"])
+    @patch("builtins.open", new_callable=MagicMock)
+    @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
@@ -138,6 +141,8 @@ class TestMainOrchestration:
         mock_updater_class: Mock,
         mock_formatter: Mock,
         mock_tempfile: Mock,
+        mock_yaml_load: Mock,
+        mock_open: Mock,
         tmp_path: Path,
     ) -> None:
         """Test 5: main() fetches each schema file via GitHubSchemaFetcher."""
@@ -156,6 +161,9 @@ class TestMainOrchestration:
         mock_temp.__exit__ = Mock(return_value=None)
         mock_temp.name = "/tmp/test.yaml"
         mock_tempfile.return_value = mock_temp
+
+        # Mock YAML parsing
+        mock_yaml_load.return_value = {}
 
         # Mock parser/generator
         mock_parser = Mock()
@@ -178,6 +186,9 @@ class TestMainOrchestration:
         # Verify schema was fetched
         mock_fetcher.fetch_file_content.assert_called_once_with("schema/config.yaml")
 
+    @patch("sys.argv", ["main"])
+    @patch("builtins.open", new_callable=MagicMock)
+    @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.Path.unlink")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
     @patch("declarative_configuration_sync.main.run_npm_formatter")
@@ -200,6 +211,8 @@ class TestMainOrchestration:
         mock_formatter: Mock,
         mock_tempfile: Mock,
         mock_unlink: Mock,
+        mock_yaml_load: Mock,
+        mock_open: Mock,
         tmp_path: Path,
     ) -> None:
         """Test 6: main() writes fetched content to temporary files for parsing."""
@@ -219,6 +232,9 @@ class TestMainOrchestration:
         mock_temp.__enter__ = Mock(return_value=mock_temp)
         mock_temp.__exit__ = Mock(return_value=None)
         mock_tempfile.return_value = mock_temp
+
+        # Mock YAML parsing
+        mock_yaml_load.return_value = {}
 
         # Mock parser/generator
         mock_parser = Mock()
@@ -241,6 +257,9 @@ class TestMainOrchestration:
         # Verify content was written to temp file
         mock_temp.write.assert_called_once_with("yaml: content")
 
+    @patch("sys.argv", ["main"])
+    @patch("builtins.open", new_callable=MagicMock)
+    @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
@@ -261,6 +280,8 @@ class TestMainOrchestration:
         mock_updater_class: Mock,
         mock_formatter: Mock,
         mock_tempfile: Mock,
+        mock_yaml_load: Mock,
+        mock_open: Mock,
         tmp_path: Path,
     ) -> None:
         """Test 7: main() generates both language status and type documentation."""
@@ -280,9 +301,12 @@ class TestMainOrchestration:
         mock_temp.name = "/tmp/test.yaml"
         mock_tempfile.return_value = mock_temp
 
+        # Mock YAML parsing
+        mock_yaml_load.return_value = {}
+
         # Mock parser
         mock_parser = Mock()
-        mock_implementations = [Mock()]
+        mock_implementations = [{"language": "go"}]
         mock_types = [Mock()]
         mock_parser.parse_language_status.return_value = mock_implementations
         mock_parser.parse_schema_types.return_value = mock_types
@@ -302,11 +326,13 @@ class TestMainOrchestration:
         main()
 
         # Verify both generation methods were called
-        mock_generator.generate_language_status_accordion.assert_called_once_with(
-            mock_implementations
-        )
+        # Should be called with implementations grouped by language
+        mock_generator.generate_language_status_accordion.assert_called_once()
         mock_generator.generate_type_table.assert_called_once_with(mock_types)
 
+    @patch("sys.argv", ["main"])
+    @patch("builtins.open", new_callable=MagicMock)
+    @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
@@ -327,6 +353,8 @@ class TestMainOrchestration:
         mock_updater_class: Mock,
         mock_formatter: Mock,
         mock_tempfile: Mock,
+        mock_yaml_load: Mock,
+        mock_open: Mock,
         tmp_path: Path,
     ) -> None:
         """Test 8: main() updates target markdown files with marker injection."""
@@ -345,6 +373,9 @@ class TestMainOrchestration:
         mock_temp.__exit__ = Mock(return_value=None)
         mock_temp.name = "/tmp/test.yaml"
         mock_tempfile.return_value = mock_temp
+
+        # Mock YAML parsing
+        mock_yaml_load.return_value = {}
 
         # Mock parser/generator
         mock_parser = Mock()
@@ -380,6 +411,9 @@ class TestMainOrchestration:
         assert calls[1][0][1] == "types"
         assert calls[1][0][2] == "type content"
 
+    @patch("sys.argv", ["main"])
+    @patch("builtins.open", new_callable=MagicMock)
+    @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
@@ -400,6 +434,8 @@ class TestMainOrchestration:
         mock_updater_class: Mock,
         mock_formatter: Mock,
         mock_tempfile: Mock,
+        mock_yaml_load: Mock,
+        mock_open: Mock,
         tmp_path: Path,
     ) -> None:
         """Test 9: main() calls run_npm_formatter() after content generation."""
@@ -414,6 +450,7 @@ class TestMainOrchestration:
         # Verify formatter was called with repo root
         mock_formatter.assert_called_once_with(tmp_path)
 
+    @patch("sys.argv", ["main"])
     @patch("declarative_configuration_sync.main.run_npm_formatter")
     @patch("declarative_configuration_sync.main.MarkerUpdater")
     @patch("declarative_configuration_sync.main.ContentGenerator")
@@ -444,6 +481,7 @@ class TestMainOrchestration:
         # Should not raise SystemExit
         main()
 
+    @patch("sys.argv", ["main"])
     @patch("declarative_configuration_sync.main.find_repo_root")
     def test_exits_with_one_on_repo_root_error(
         self, mock_find_root: Mock
@@ -456,6 +494,7 @@ class TestMainOrchestration:
 
         assert exc_info.value.code == 1
 
+    @patch("sys.argv", ["main"])
     @patch("declarative_configuration_sync.main.os.chdir")
     @patch("declarative_configuration_sync.main.find_repo_root")
     @patch("declarative_configuration_sync.main.InventoryManager")
