@@ -17,8 +17,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### GitHub Automation
 
-- [ ] **CONF-06**: GitHub Action runs on manual dispatch
-- [ ] **CONF-07**: GitHub Action runs on schedule (daily at 03:00 UTC)
+- [x] **CONF-06**: GitHub Action runs on manual dispatch
+- [x] **CONF-07**: GitHub Action runs on schedule (daily at 03:00 UTC)
 - [ ] **CONF-08**: GitHub Action runs when opentelemetry-configuration releases
 - [ ] **CONF-09**: GitHub Action creates/updates PR with changes using otelbot
 - [ ] **CONF-10**: Fork testing workflow allows contributors to test in their forks
@@ -70,8 +70,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONF-03 | Phase 1 | Complete |
 | CONF-04 | Phase 1 | Complete |
 | CONF-05 | Phase 1 | Complete |
-| CONF-06 | Phase 3 | Pending |
-| CONF-07 | Phase 3 | Pending |
+| CONF-06 | Phase 3 | Complete |
+| CONF-07 | Phase 3 | Complete |
 | CONF-08 | Phase 3 | Pending |
 | CONF-09 | Phase 4 | Pending |
 | CONF-10 | Phase 4 | Pending |

@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-last_updated: "2026-03-06T20:00:33Z"
+status: planning
+last_updated: "2026-03-06T20:06:51.620Z"
 progress:
   total_phases: 4
   completed_phases: 2
@@ -25,23 +25,23 @@ progress:
 
 ## Current Position
 
-**Phase:** 02 - Repository Integration (Complete)
-**Plan:** 03 Complete - CLI Orchestration & npm Integration
-**Status:** Ready for Phase 3
+**Phase:** 03 - GitHub Actions Workflow (In Progress)
+**Plan:** 01 Complete - CLI Mode Flag Implementation
+**Status:** Executing
 
 ```
-Progress: [██████████] 100%
+Progress: [████████▓▓] 80%
 Phase 1: Core Data Pipeline — Complete (4/4 plans complete)
 Phase 2: Repository Integration — Complete (3/3 plans complete)
-Phase 3: GitHub Actions Workflow — Not started
+Phase 3: GitHub Actions Workflow — In Progress (1/3 plans complete)
 Phase 4: PR Automation & Polish — Not started
 ```
 
 ## Performance Metrics
 
-**Phase velocity:** Phase 1 complete (4/4 plans, 13 minutes), Phase 2 complete (3/3 plans, 17 minutes)
-**Plan completion rate:** 7 plans completed (100% overall, 100% of Phase 2)
-**Requirement coverage:** 15/19 (79%)
+**Phase velocity:** Phase 1 complete (4/4 plans, 13 minutes), Phase 2 complete (3/3 plans, 17 minutes), Phase 3 in progress (1/3 plans, 5 minutes)
+**Plan completion rate:** 8 plans completed (80% overall, 33% of Phase 3)
+**Requirement coverage:** 17/19 (89%)
 
 **Quality indicators:**
 - Requirements validated: Yes
@@ -59,6 +59,7 @@ Phase 4: PR Automation & Polish — Not started
 | 02    | 01   | 3 min    | 1     | 2     |
 | 02    | 02   | 2 min    | 1     | 2     |
 | 02    | 03   | 12 min   | 3     | 5     |
+| 03    | 01   | 5 min    | 3     | 5     |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Phase 4: PR Automation & Polish — Not started
 | npm subprocess execution (02-03) | 2026-03-06 | Integrates with existing repository tooling for Prettier compliance via subprocess.run with error handling |
 | GitHub API via temporary files (02-03) | 2026-03-06 | Clean separation of concerns - fetch from API, write to temp file, parse YAML, then clean up |
 | Language implementation grouping (02-03) | 2026-03-06 | ContentGenerator expects dict[str, list[LanguageImplementation]] grouped by language for accordion generation |
+| Required --mode flag for ref selection (03-01) | 2026-03-06 | Prevents accidental sync to wrong Git ref by making mode explicit - workflow uses --mode=lang-status or --mode=types |
+| fetch_latest_release() returns tag string (03-01) | 2026-03-06 | Simple string return type matches GitHub API response format - minimal approach for ref parameter |
+| Early ref selection in main() (03-01) | 2026-03-06 | Fetch release tag early to fail fast if GitHub API unavailable - provides clear error messages before schema processing |
 
 ### Active TODOs
 
@@ -115,29 +119,31 @@ None currently. Roadmap ready for planning.
 
 ### What Just Happened
 
-**Action:** Executed Plan 02-03 (CLI Orchestration & npm Integration)
-**Outcome:** Complete main() CLI orchestrating GitHub API fetching, schema discovery, parsing, generation, marker injection, and npm formatting with idempotent output
+**Action:** Executed Plan 03-01 (CLI Mode Flag Implementation)
+**Outcome:** Complete --mode flag implementation enabling sync from main branch (lang-status) or latest release tag (types) via GitHub releases API
 **Files created:**
-- `scripts/declarative-configuration-sync/src/declarative_configuration_sync/main.py` — CLI orchestration with GitHub API integration (215 lines)
-- `scripts/declarative-configuration-sync/tests/test_declarative_configuration_sync/test_integration/__init__.py` — Test package initialization
-- `scripts/declarative-configuration-sync/tests/test_declarative_configuration_sync/test_integration/test_npm_formatting.py` — 10 tests for helper functions
-- `scripts/declarative-configuration-sync/tests/test_declarative_configuration_sync/test_integration/test_main.py` — 12 tests for main() orchestration
-- `scripts/declarative-configuration-sync/tests/test_declarative_configuration_sync/test_integration/test_idempotence.py` — 3 tests for consistent generation
-- `.planning/phases/02-repository-integration/02-03-SUMMARY.md` — Execution summary
+- `scripts/declarative-configuration-sync/tests/test_declarative_configuration_sync/test_integration/test_github_fetcher.py` — 6 tests for fetch_latest_release() and ref parameter
+- `.planning/phases/03-github-actions-workflow/03-01-SUMMARY.md` — Execution summary
+
+**Files modified:**
+- `scripts/declarative-configuration-sync/src/declarative_configuration_sync/main.py` — Added --mode argument parsing and ref selection logic
+- `scripts/declarative-configuration-sync/src/declarative_configuration_sync/github_fetcher.py` — Implemented fetch_latest_release() method
+- `scripts/declarative-configuration-sync/tests/test_declarative_configuration_sync/test_integration/test_main.py` — Updated tests for --mode flag and ref parameter
+- `scripts/declarative-configuration-sync/tests/test_declarative_configuration_sync/test_integration/test_idempotence.py` — Fixed for --mode requirement
 
 **Commits:**
-- 30e5caa82: test(02-03): add failing tests for npm formatting and repo root discovery
-- 29a85d2f4: feat(02-03): implement helper functions for repo root discovery and npm formatting
-- 232dd19f5: test(02-03): add failing tests for main() CLI orchestration
-- 4613d0296: feat(02-03): implement main() CLI orchestration with GitHub API integration
-- d0fd8a4ed: test(02-03): add idempotence tests for consistent generation
-- 059a95062: refactor(02-03): fix linting issues in main.py
+- 1d739e6b3: test(03-01): add failing tests for --mode argument parsing
+- 55c3fb314: feat(03-01): implement --mode argument parsing in main()
+- 7d37ef114: test(03-01): add failing tests for fetch_latest_release() method
+- a6b2f62d0: feat(03-01): implement fetch_latest_release() method in GitHubSchemaFetcher
+- 6e4c714bd: feat(03-01): wire --mode flag to ref selection in main()
+- 3821b143b: refactor(03-01): fix test compatibility and type annotations
 
 ### What's Next
 
-**Immediate:** Begin Phase 3 (GitHub Actions Workflow)
-**Next step:** Design and implement GitHub Actions workflow for automated execution
-**Expected:** Workflow configuration, schedule triggers, PR automation, error handling
+**Immediate:** Continue Phase 3 Plan 02 (GitHub Actions Workflow Configuration)
+**Next step:** Create .github/workflows/sync-configuration-docs.yml with lang-status and types jobs
+**Expected:** Workflow YAML with matrix strategy, schedule triggers, job separation
 
 ### Context for Next Session
 

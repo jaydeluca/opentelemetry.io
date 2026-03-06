@@ -8,7 +8,7 @@
 ## Phases
 
 - [x] **Phase 1: Core Data Pipeline** - YAML parsing, markdown generation, marker-based injection
-- [~] **Phase 2: Repository Integration** - Git operations, CLI orchestration, local workflow (2/3 plans)
+- [x] **Phase 2: Repository Integration** - Git operations, CLI orchestration, local workflow (3/3 plans)
 - [ ] **Phase 3: GitHub Actions Workflow** - Scheduled automation, manual triggers, authentication
 - [ ] **Phase 4: PR Automation & Polish** - Automated pull requests, fork testing, validation pipeline
 
@@ -17,8 +17,8 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Data Pipeline | 4/4 | Complete | 2026-03-06 |
-| 2. Repository Integration | 2/3 | In Progress | - |
-| 3. GitHub Actions Workflow | 0/? | Not started | - |
+| 2. Repository Integration | 3/3 | Complete | 2026-03-06 |
+| 3. GitHub Actions Workflow | 0/3 | Ready to execute | - |
 | 4. PR Automation & Polish | 0/? | Not started | - |
 
 ## Phase Details
@@ -68,7 +68,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — GitHub API fetcher for schema files
 - [x] 02-02-PLAN.md — Inventory Manager for schema discovery
-- [ ] 02-03-PLAN.md — CLI entry point and npm integration
+- [x] 02-03-PLAN.md — CLI entry point and npm integration
 
 ---
 
@@ -78,16 +78,21 @@ Plans:
 
 **Depends on**: Phase 2
 
-**Requirements**: CONF-06, CONF-07, CONF-08
+**Requirements**: CONF-06, CONF-07
 
 **Success Criteria** (what must be TRUE):
 1. GitHub Action triggers manually via workflow_dispatch from Actions UI
 2. GitHub Action runs daily at 03:00 UTC on schedule
-3. GitHub Action triggers when opentelemetry-configuration repository publishes a release
+3. GitHub Action triggers when opentelemetry-configuration repository publishes a release (deferred - manual trigger serves as workaround)
 4. Workflow authenticates using otelbot GitHub App credentials with proper permissions (contents: write, pull-requests: write)
 5. Workflow executes Python script successfully and reports failures with actionable error messages
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Python --mode flag support and latest release fetching
+- [ ] 03-02-PLAN.md — Shell script orchestration for workflow execution
+- [ ] 03-03-PLAN.md — Main and fork workflow files with otelbot authentication
 
 ---
 
@@ -123,7 +128,7 @@ All v1 requirements mapped to phases:
 | CONF-05 | Phase 1 | Python script updates markdown files between markers |
 | CONF-06 | Phase 3 | GitHub Action runs on manual dispatch |
 | CONF-07 | Phase 3 | GitHub Action runs on schedule (daily 03:00 UTC) |
-| CONF-08 | Phase 3 | GitHub Action runs on opentelemetry-configuration releases |
+| CONF-08 | Phase 4 | GitHub Action runs on opentelemetry-configuration releases (deferred) |
 | CONF-09 | Phase 4 | GitHub Action creates/updates PR with otelbot |
 | CONF-10 | Phase 4 | Fork testing workflow for contributors |
 | CONF-11 | Phase 2 | Script follows collector-sync structure |
@@ -153,4 +158,4 @@ All v1 requirements mapped to phases:
 
 ---
 
-*Last updated: 2026-03-06 after Phase 2 planning*
+*Last updated: 2026-03-06 after Phase 3 planning*
