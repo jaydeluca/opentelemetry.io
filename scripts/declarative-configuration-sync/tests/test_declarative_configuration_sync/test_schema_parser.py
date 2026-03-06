@@ -48,7 +48,8 @@ class TestParseFile:
     def test_parse_malformed_yaml(self, tmp_path: Path) -> None:
         """Raise ValueError on malformed YAML."""
         yaml_file = tmp_path / "bad.yaml"
-        yaml_file.write_text("key: value\n  invalid indentation\n  - oops")
+        # Truly malformed YAML: unmatched bracket
+        yaml_file.write_text("key: [value1, value2\nmissing: bracket")
 
         parser = SchemaParser()
 
