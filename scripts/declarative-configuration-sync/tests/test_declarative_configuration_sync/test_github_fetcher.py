@@ -83,9 +83,9 @@ class TestGitHubSchemaFetcher:
         with patch("requests.get") as mock_get:
             mock_response = Mock()
             mock_response.status_code = 404
-            mock_response.raise_for_status = Mock(
-                side_effect=requests.exceptions.HTTPError("404 Not Found")
-            )
+            http_error = requests.exceptions.HTTPError("404 Not Found")
+            http_error.response = mock_response  # Attach response to exception
+            mock_response.raise_for_status = Mock(side_effect=http_error)
             mock_get.return_value = mock_response
 
             with pytest.raises(RuntimeError) as exc_info:
@@ -102,9 +102,9 @@ class TestGitHubSchemaFetcher:
         with patch("requests.get") as mock_get:
             mock_response = Mock()
             mock_response.status_code = 403
-            mock_response.raise_for_status = Mock(
-                side_effect=requests.exceptions.HTTPError("403 Forbidden")
-            )
+            http_error = requests.exceptions.HTTPError("403 Forbidden")
+            http_error.response = mock_response  # Attach response to exception
+            mock_response.raise_for_status = Mock(side_effect=http_error)
             mock_get.return_value = mock_response
 
             with pytest.raises(RuntimeError) as exc_info:
