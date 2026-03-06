@@ -6,6 +6,7 @@ from declarative_configuration_sync.content_generator import ContentGenerator
 from declarative_configuration_sync.type_defs import (
     LanguageImplementation,
     PropertyStatus,
+    SchemaType,
 )
 
 
@@ -213,3 +214,81 @@ class TestLanguageStatusAccordion:
         result_lines = result.split("\n")
         for i, expected in enumerate(expected_lines):
             assert result_lines[i] == expected, f"Line {i} should match: {expected}"
+
+
+class TestTypeTable:
+    """Test type documentation table generation."""
+
+    def test_generate_type_table_creates_table_with_header(self):
+        """Type table should have header and rows."""
+        generator = ContentGenerator()
+        types = [
+            SchemaType(name="TypeA", description="First type", properties=["prop1", "prop2"]),
+            SchemaType(name="TypeB", description="Second type"),
+        ]
+        result = generator.generate_type_table(types)
+
+        # Should have table header
+        assert "| Type | Description | Properties |" in result
+        assert "|---|---|---|" in result
+        # Should have both types
+        assert "TypeA" in result
+        assert "TypeB" in result
+
+    def test_generate_type_table_type_names_link_to_lowercase_anchors(self):
+        """Type names should link to lowercase anchors."""
+        generator = ContentGenerator()
+        types = [SchemaType(name="MixedCaseType")]
+        result = generator.generate_type_table(types)
+
+        assert "[`MixedCaseType`](#mixedcasetype)" in result
+        assert "#MixedCaseType" not in result
+
+    def test_generate_type_table_escapes_descriptions(self):
+        """Descriptions with pipes should be escaped."""
+        generator = ContentGenerator()
+        types = [SchemaType(name="TestType", description="foo|bar|baz")]
+        result = generator.generate_type_table(types)
+
+        assert "foo\\|bar\\|baz" in result
+
+    def test_generate_type_table_joins_properties_with_commas(self):
+        """Properties should be joined with commas."""
+        generator = ContentGenerator()
+        types = [SchemaType(name="TestType", properties=["prop1", "prop2", "prop3"])]
+        result = generator.generate_type_table(types)
+
+        assert "`prop1`, `prop2`, `prop3`" in result
+
+    def test_generate_type_table_handles_missing_optional_fields(self):
+        """Missing description and properties should not break table."""
+        generator = ContentGenerator()
+        types = [SchemaType(name="MinimalType")]
+        result = generator.generate_type_table(types)
+
+        # Should have type name
+        assert "MinimalType" in result
+        # Should have valid table structure with empty cells
+        assert "| [`MinimalType`](#minimaltype) |  |  |" in result
+
+    def test_generate_type_table_sorts_by_name(self):
+        """Types should be sorted alphabetically by name."""
+        generator = ContentGenerator()
+        types = [
+            SchemaType(name="TypeC"),
+            SchemaType(name="TypeA"),
+            SchemaType(name="TypeB"),
+        ]
+        result = generator.generate_type_table(types)
+
+        lines = result.split("\n")
+        type_a_line = next(i for i, line in enumerate(lines) if "TypeA" in line)
+        type_b_line = next(i for i, line in enumerate(lines) if "TypeB" in line)
+        type_c_line = next(i for i, line in enumerate(lines) if "TypeC" in line)
+        assert type_a_line < type_b_line < type_c_line, "Types should be sorted alphabetically"
+
+    def test_generate_type_table_empty_list(self):
+        """Empty types list should return empty string."""
+        generator = ContentGenerator()
+        result = generator.generate_type_table([])
+        assert result == ""
