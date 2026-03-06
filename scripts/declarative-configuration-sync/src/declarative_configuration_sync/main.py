@@ -108,14 +108,25 @@ def configure_logging() -> None:
 
 
 def main() -> None:
-    """Update declarative configuration documentation."""
+    """Update declarative configuration documentation.
+
+    Accepts --mode argument to specify sync mode:
+    - lang-status: Sync language implementation status from main branch
+    - types: Sync type documentation from latest release
+    """
     configure_logging()
 
     parser = argparse.ArgumentParser(
         description="Update OpenTelemetry declarative configuration documentation",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.parse_args()  # No arguments currently, but enables --help
+    parser.add_argument(
+        "--mode",
+        choices=["lang-status", "types"],
+        required=True,
+        help="Sync mode: lang-status (from main branch) or types (from latest release)",
+    )
+    args = parser.parse_args()
 
     logger.info("=" * 60)
     logger.info("Declarative Configuration Documentation Sync")
