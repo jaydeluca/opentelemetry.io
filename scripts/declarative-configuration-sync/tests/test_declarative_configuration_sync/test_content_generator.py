@@ -1,7 +1,5 @@
 """Tests for ContentGenerator module."""
 
-import pytest
-
 from declarative_configuration_sync.content_generator import ContentGenerator
 from declarative_configuration_sync.type_defs import (
     LanguageImplementation,
@@ -173,7 +171,9 @@ class TestLanguageStatusAccordion:
         # Should have Hugo shortcode
         assert "{{< sdk-lang-status-accordion >}}" in result
         # Should have div wrapper
-        assert '<div class="language-implementation-status-content" style="display: none;">' in result
+        assert (
+            '<div class="language-implementation-status-content" style="display: none;">' in result
+        )
         assert "</div>" in result
         # Should have both language sections
         assert "### cpp {#cpp}" in result
