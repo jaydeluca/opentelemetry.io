@@ -34,7 +34,7 @@ class MarkerUpdater:
         end = f"<!-- END {self.marker_prefix}: {marker_id} SOURCE: {self.source} -->"
         return begin, end
 
-    def _build_marker_regex(self, marker_id: str) -> re.Pattern:
+    def _build_marker_regex(self, marker_id: str) -> re.Pattern[str]:
         """Build regex pattern to match marker section.
 
         Matches patterns like:
