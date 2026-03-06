@@ -5,7 +5,7 @@ via GitHub API without requiring local git clone.
 """
 
 import logging
-from typing import Final
+from typing import Any, Final, cast
 
 import requests
 from requests.exceptions import ConnectionError, RequestException, Timeout
@@ -63,16 +63,16 @@ class GitHubSchemaFetcher:
             )
             response.raise_for_status()
 
-            data = response.json()
+            data: dict[str, Any] = response.json()
             tag_name = data.get("tag_name")
 
-            if not tag_name:
+            if not tag_name or not isinstance(tag_name, str):
                 error_msg = "GitHub API response missing 'tag_name' field"
                 logger.error(error_msg)
                 raise RuntimeError(error_msg)
 
             logger.info(f"Latest release: {tag_name}")
-            return tag_name
+            return cast(str, tag_name)
 
         except Timeout as e:
             error_msg = f"Request timeout after {self.timeout}s while fetching latest release"

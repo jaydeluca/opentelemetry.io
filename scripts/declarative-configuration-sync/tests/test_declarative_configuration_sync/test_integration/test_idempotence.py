@@ -4,9 +4,6 @@ import hashlib
 from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
 
-import pytest
-
-
 # Import will work since main.py now exists
 from declarative_configuration_sync.main import main
 
@@ -14,7 +11,7 @@ from declarative_configuration_sync.main import main
 class TestIdempotence:
     """Tests for idempotent documentation generation."""
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
     @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
@@ -147,7 +144,7 @@ class TestIdempotence:
         ), "Language status content changed between runs"
         assert first_type_hash == second_type_hash, "Type content changed between runs"
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
     @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
@@ -238,7 +235,7 @@ class TestIdempotence:
         # Content should be identical
         assert first_outputs == second_outputs
 
-    @patch("sys.argv", ["main"])
+    @patch("sys.argv", ["main", "--mode=lang-status"])
     @patch("builtins.open", new_callable=MagicMock)
     @patch("declarative_configuration_sync.main.yaml.safe_load")
     @patch("declarative_configuration_sync.main.tempfile.NamedTemporaryFile")
