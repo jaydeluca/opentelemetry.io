@@ -39,6 +39,71 @@ class GitHubSchemaFetcher:
         """
         self.timeout = timeout
 
+    def fetch_latest_release(self) -> str:
+        """Fetch latest release tag from opentelemetry-configuration repository.
+
+        Returns:
+            Release tag name (e.g., "v0.1.0")
+
+        Raises:
+            RuntimeError: If GitHub API request fails or no releases found
+        """
+        url = f"{self.API_BASE}/repos/{self.REPO_OWNER}/{self.REPO_NAME}/releases/latest"
+        headers = {
+            "Accept": "application/vnd.github+json",
+        }
+
+        logger.info("Fetching latest release from GitHub API")
+
+        try:
+            response = requests.get(
+                url,
+                headers=headers,
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            tag_name = data.get("tag_name")
+
+            if not tag_name:
+                error_msg = "GitHub API response missing 'tag_name' field"
+                logger.error(error_msg)
+                raise RuntimeError(error_msg)
+
+            logger.info(f"Latest release: {tag_name}")
+            return tag_name
+
+        except Timeout as e:
+            error_msg = f"Request timeout after {self.timeout}s while fetching latest release"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+
+        except ConnectionError as e:
+            error_msg = f"Network error while fetching latest release: {e}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+
+        except requests.exceptions.HTTPError as e:
+            if e.response is not None:
+                status_code = e.response.status_code
+                if status_code == 404:
+                    error_msg = "No releases found for opentelemetry-configuration repository"
+                elif status_code == 403:
+                    error_msg = "GitHub API rate limit exceeded or authentication required"
+                else:
+                    error_msg = f"HTTP {status_code} error while fetching latest release"
+            else:
+                error_msg = f"HTTP error while fetching latest release: {e}"
+
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+
+        except RequestException as e:
+            error_msg = f"Request error while fetching latest release: {e}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+
     def fetch_file_content(self, file_path: str, ref: str = "main") -> str:
         """Fetch raw file content from GitHub API.
 
