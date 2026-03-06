@@ -1,0 +1,47 @@
+# Sample configuration schema for testing
+types:
+  - name: "OpenTelemetryConfiguration"
+    description: "Root configuration object"
+    properties:
+      - "file_format"
+      - "disabled"
+      - "resource"
+
+  - name: "Resource"
+    description: "Resource configuration"
+    properties:
+      - "attributes"
+      - "schema_url"
+
+languages:
+  cpp:
+    file_format: "1.0.0-rc.2"
+    types:
+      - name: "OpenTelemetryConfiguration"
+        status: "supported"
+        properties:
+          - name: "file_format"
+            status: "supported"
+          - name: "disabled"
+            status: "supported"
+          - name: "resource"
+            status: "supported"
+
+      - name: "Resource"
+        status: "supported"
+        properties:
+          - name: "attributes"
+            status: "supported"
+          - name: "schema_url"
+            status: "not_implemented"
+
+  java:
+    file_format: "1.0.0-rc.1"
+    types:
+      - name: "OpenTelemetryConfiguration"
+        status: "supported"
+        properties:
+          - name: "file_format"
+            status: "supported"
+          - name: "disabled"
+            status: "supported"
