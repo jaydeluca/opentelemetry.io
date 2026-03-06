@@ -115,7 +115,7 @@ def main() -> None:
         description="Update OpenTelemetry declarative configuration documentation",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    args = parser.parse_args()
+    parser.parse_args()  # No arguments currently, but enables --help
 
     logger.info("=" * 60)
     logger.info("Declarative Configuration Documentation Sync")
@@ -177,7 +177,9 @@ def main() -> None:
                 types = parser_obj.parse_schema_types(schema_data)
 
                 # Group implementations by language for accordion generation
-                implementations_by_language: dict[str, list[LanguageImplementation]] = defaultdict(list)
+                implementations_by_language: dict[
+                    str, list[LanguageImplementation]
+                ] = defaultdict(list)
                 for impl in implementations:
                     implementations_by_language[impl["language"]].append(impl)
 
@@ -190,10 +192,13 @@ def main() -> None:
                 # Update target files
                 lang_status_file = (
                     repo_root
-                    / "content/en/docs/languages/sdk-configuration/language-implementation-status.md"
+                    / "content/en/docs/languages/sdk-configuration"
+                    / "language-implementation-status.md"
                 )
                 types_file = (
-                    repo_root / "content/en/docs/languages/sdk-configuration/types.md"
+                    repo_root
+                    / "content/en/docs/languages/sdk-configuration"
+                    / "types.md"
                 )
 
                 updater.update_file(

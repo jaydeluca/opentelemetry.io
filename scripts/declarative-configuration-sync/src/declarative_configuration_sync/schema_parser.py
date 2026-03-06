@@ -1,14 +1,14 @@
 """YAML schema parser for OpenTelemetry configuration schemas."""
 
-import yaml
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 from declarative_configuration_sync.type_defs import (
     LanguageImplementation,
     PropertyStatus,
     SchemaType,
-    SupportStatus,
 )
 
 
