@@ -133,3 +133,36 @@ class ContentGenerator:
         lines.append("</div>")
 
         return "\n".join(lines)
+
+    def generate_type_table(self, types: list[SchemaType]) -> str:
+        """Generate type documentation table.
+
+        Args:
+            types: List of schema type definitions
+
+        Returns:
+            Markdown table with type descriptions and properties
+        """
+        if not types:
+            return ""
+
+        lines = ["| Type | Description | Properties |", "|---|---|---|"]
+
+        # Sort by type name for consistent ordering
+        sorted_types = sorted(types, key=lambda x: x["name"])
+
+        for schema_type in sorted_types:
+            name = schema_type["name"]
+            # Type name with anchor link
+            type_link = f"[`{name}`](#{name.lower()})"
+
+            # Description (optional, escaped)
+            description = self.escape_markdown_table_content(schema_type.get("description", ""))
+
+            # Properties list (optional)
+            properties = schema_type.get("properties", [])
+            props_str = ", ".join(f"`{p}`" for p in properties) if properties else ""
+
+            lines.append(f"| {type_link} | {description} | {props_str} |")
+
+        return "\n".join(lines)
