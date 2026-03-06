@@ -1,0 +1,75 @@
+name: Sync Declarative Configuration docs
+
+on:
+  workflow_dispatch:
+  schedule:
+    # At 03:00 UTC, every day
+    - cron: '0 3 * * *'
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  sync-lang-status:
+    name: Sync language implementation status
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    if: github.repository == 'open-telemetry/opentelemetry.io'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      - uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
+        with:
+          enable-cache: true
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: package.json
+      - name: Use CLA approved github bot
+        run: |
+          git config user.name otelbot
+          git config user.email 197425009+otelbot@users.noreply.github.com
+      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        id: otelbot-token
+        with:
+          app-id: ${{ vars.OTELBOT_DOCS_APP_ID }}
+          private-key: ${{ secrets.OTELBOT_DOCS_PRIVATE_KEY }}
+      - run: bash .github/scripts/declarative-configuration-sync.sh --mode=lang-status
+        env:
+          GH_TOKEN: ${{ steps.otelbot-token.outputs.token }}
+          GITHUB_REPOSITORY: open-telemetry/opentelemetry.io
+
+  sync-types:
+    name: Sync types documentation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    if: github.repository == 'open-telemetry/opentelemetry.io'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      - uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
+        with:
+          enable-cache: true
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: package.json
+      - name: Use CLA approved github bot
+        run: |
+          git config user.name otelbot
+          git config user.email 197425009+otelbot@users.noreply.github.com
+      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        id: otelbot-token
+        with:
+          app-id: ${{ vars.OTELBOT_DOCS_APP_ID }}
+          private-key: ${{ secrets.OTELBOT_DOCS_PRIVATE_KEY }}
+      - run: bash .github/scripts/declarative-configuration-sync.sh --mode=types
+        env:
+          GH_TOKEN: ${{ steps.otelbot-token.outputs.token }}
+          GITHUB_REPOSITORY: open-telemetry/opentelemetry.io
