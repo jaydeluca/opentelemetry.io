@@ -146,7 +146,6 @@ def main() -> None:
     # Initialize GitHub API clients
     logger.info("\nInitializing GitHub API clients...")
     fetcher = GitHubSchemaFetcher()
-    inventory_manager = InventoryManager()
 
     # Determine Git ref based on sync mode
     logger.info("\nDetermining Git ref for sync mode...")
@@ -162,6 +161,9 @@ def main() -> None:
     except RuntimeError as e:
         logger.error(f"❌ {e}")
         sys.exit(1)
+
+    # Initialize inventory manager with correct ref
+    inventory_manager = InventoryManager(ref=ref)
 
     # Discover schemas
     logger.info("\nDiscovering schema files via GitHub API...")
