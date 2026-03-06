@@ -68,3 +68,68 @@ class ContentGenerator:
         details = f" {props} " if props else "  "
 
         return f"| {type_link} | {status} | {notes} | {details}|"
+
+    def generate_language_status_table(
+        self, implementations: list[LanguageImplementation], language: str
+    ) -> str:
+        """Generate status table for a single language.
+
+        Args:
+            implementations: List of implementations for this language
+            language: Language name (e.g., "cpp", "java")
+
+        Returns:
+            Markdown table section for one language
+        """
+        if not implementations:
+            return ""
+
+        # Extract file format from first implementation (all same language)
+        file_format = implementations[0]["file_format"] if implementations else "unknown"
+
+        # Sort by type name for consistent ordering
+        sorted_impls = sorted(implementations, key=lambda x: x["type_name"])
+
+        lines = [
+            f"### {language} {{#{language}}}",
+            "",
+            f"Latest supported file format: `{file_format}`",
+            "",
+            "| Type | Status | Notes | Support Status Details |",
+            "|---|---|---|---|",
+        ]
+
+        for impl in sorted_impls:
+            lines.append(self.generate_table_row(impl))
+
+        return "\n".join(lines)
+
+    def generate_language_status_accordion(
+        self, implementations_by_language: dict[str, list[LanguageImplementation]]
+    ) -> str:
+        """Generate accordion-wrapped tables for all languages.
+
+        Args:
+            implementations_by_language: Dict mapping language name to implementations
+
+        Returns:
+            Complete accordion section with Hugo shortcode wrapper
+        """
+        lines = [
+            "{{< sdk-lang-status-accordion >}}",
+            "",
+            '<div class="language-implementation-status-content" style="display: none;">',
+            "",
+        ]
+
+        # Sort languages alphabetically
+        for language in sorted(implementations_by_language.keys()):
+            impls = implementations_by_language[language]
+            table = self.generate_language_status_table(impls, language)
+            if table:
+                lines.append(table)
+                lines.append("")  # Blank line between languages
+
+        lines.append("</div>")
+
+        return "\n".join(lines)
