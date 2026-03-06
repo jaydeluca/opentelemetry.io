@@ -99,3 +99,117 @@ class TestTableRowGeneration:
         result = generator.generate_table_row(impl)
         assert "#mixedcasetype" in result
         assert "#MixedCaseType" not in result
+
+
+class TestLanguageStatusTable:
+    """Test language status table generation."""
+
+    def test_generate_language_status_table_creates_complete_table(self):
+        """Language status table should have header, format, and rows."""
+        generator = ContentGenerator()
+        implementations = [
+            LanguageImplementation(
+                language="cpp",
+                file_format="1.0.0-rc.2",
+                type_name="TypeB",
+                status="supported",
+            ),
+            LanguageImplementation(
+                language="cpp",
+                file_format="1.0.0-rc.2",
+                type_name="TypeA",
+                status="not_implemented",
+            ),
+        ]
+        result = generator.generate_language_status_table(implementations, "cpp")
+
+        # Should have language header with anchor
+        assert "### cpp {#cpp}" in result
+        # Should have file format
+        assert "Latest supported file format: `1.0.0-rc.2`" in result
+        # Should have table header
+        assert "| Type | Status | Notes | Support Status Details |" in result
+        assert "|---|---|---|---|" in result
+        # Should have rows sorted by type name
+        lines = result.split("\n")
+        type_a_line = next(i for i, line in enumerate(lines) if "TypeA" in line)
+        type_b_line = next(i for i, line in enumerate(lines) if "TypeB" in line)
+        assert type_a_line < type_b_line, "Types should be sorted alphabetically"
+
+    def test_generate_language_status_table_empty_list(self):
+        """Empty implementations list should return empty string."""
+        generator = ContentGenerator()
+        result = generator.generate_language_status_table([], "cpp")
+        assert result == ""
+
+
+class TestLanguageStatusAccordion:
+    """Test language status accordion generation."""
+
+    def test_generate_language_status_accordion_wraps_tables(self):
+        """Accordion should wrap multiple language tables in Hugo shortcode."""
+        generator = ContentGenerator()
+        implementations_by_language = {
+            "java": [
+                LanguageImplementation(
+                    language="java",
+                    file_format="1.0.0-rc.1",
+                    type_name="TestType",
+                    status="supported",
+                )
+            ],
+            "cpp": [
+                LanguageImplementation(
+                    language="cpp",
+                    file_format="1.0.0-rc.2",
+                    type_name="TestType",
+                    status="supported",
+                )
+            ],
+        }
+        result = generator.generate_language_status_accordion(implementations_by_language)
+
+        # Should have Hugo shortcode
+        assert "{{< sdk-lang-status-accordion >}}" in result
+        # Should have div wrapper
+        assert '<div class="language-implementation-status-content" style="display: none;">' in result
+        assert "</div>" in result
+        # Should have both language sections
+        assert "### cpp {#cpp}" in result
+        assert "### java {#java}" in result
+        # Languages should be sorted alphabetically
+        lines = result.split("\n")
+        cpp_line = next(i for i, line in enumerate(lines) if "### cpp" in line)
+        java_line = next(i for i, line in enumerate(lines) if "### java" in line)
+        assert cpp_line < java_line, "Languages should be sorted alphabetically"
+
+    def test_accordion_format_matches_target_page(self):
+        """Accordion structure should match target page exactly."""
+        generator = ContentGenerator()
+        implementations = {
+            "cpp": [
+                LanguageImplementation(
+                    language="cpp",
+                    file_format="1.0.0-rc.2",
+                    type_name="Aggregation",
+                    status="supported",
+                    properties=[
+                        PropertyStatus(name="default", status="supported"),
+                        PropertyStatus(name="drop", status="supported"),
+                    ],
+                )
+            ],
+        }
+        result = generator.generate_language_status_accordion(implementations)
+
+        # Verify exact format from target page
+        expected_lines = [
+            "{{< sdk-lang-status-accordion >}}",
+            "",
+            '<div class="language-implementation-status-content" style="display: none;">',
+            "",
+            "### cpp {#cpp}",
+        ]
+        result_lines = result.split("\n")
+        for i, expected in enumerate(expected_lines):
+            assert result_lines[i] == expected, f"Line {i} should match: {expected}"
