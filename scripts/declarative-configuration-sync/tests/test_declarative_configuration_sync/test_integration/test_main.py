@@ -1,12 +1,9 @@
 """Integration tests for main() CLI orchestration."""
 
-import sys
-import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, call, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-
 
 # Import will initially have incomplete main() - tests will fail
 from declarative_configuration_sync.main import main

@@ -3,12 +3,11 @@
 Tests GitHub API integration for fetching schema files from opentelemetry-configuration repo.
 """
 
-import json
 from unittest.mock import Mock, patch
 
 import pytest
 import requests
-from requests.exceptions import ConnectionError, RequestException, Timeout
+from requests.exceptions import ConnectionError, Timeout
 
 from declarative_configuration_sync.github_fetcher import GitHubSchemaFetcher
 

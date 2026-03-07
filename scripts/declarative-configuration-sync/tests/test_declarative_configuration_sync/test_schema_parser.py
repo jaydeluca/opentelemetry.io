@@ -5,10 +5,6 @@ from pathlib import Path
 import pytest
 
 from declarative_configuration_sync.schema_parser import SchemaParser
-from declarative_configuration_sync.type_defs import (
-    LanguageImplementation,
-    SchemaType,
-)
 
 
 class TestParseFile:
